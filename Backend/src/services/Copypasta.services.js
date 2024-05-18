@@ -33,7 +33,7 @@ exports.updateCopyPasta = async (body) => {
         const { content_id, content, code } = body;
         if (!content_id || !content || !code) throw new Error('Missing required fields');
         const copypasta = await pool.query('UPDATE copypasta SET content = $1, updated_at = NOW() WHERE copypasta_id = $2 AND code = $3 RETURNING *', [content, content_id, code]);
-        return { message: 'Copypasta updated', copypasta: copypasta.rows[0].map(({ content, copypasta_id }) => ({ content, copypasta_id })) };
+        return { message: 'Copypasta updated', copypasta: copypasta.rows.map(({ content, copypasta_id }) => ({ content, copypasta_id }))[0] };
     } catch (error) {
         return { message: 'Error updating copypasta', error: error.message };
     }
